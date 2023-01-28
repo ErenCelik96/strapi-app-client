@@ -5,6 +5,17 @@ import React from "react";
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
+  const getUser = async () => {
+    const res = await fetch("http://localhost:1337/api/users/me");
+    const data = await res.json();
+    return data;
+  };
+  React.useEffect(() => {
+    getUser()
+      .then((res) => console.log(res.data, "done"))
+      .catch((err) => console.log(err));
+  }, []);
+
   return (
     <>
       <Head>
@@ -13,6 +24,7 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <main></main>
     </>
   );
 }
