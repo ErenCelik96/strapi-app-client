@@ -56,7 +56,6 @@ const ProfileMenu = () => {
 const Navigation: React.FC<NavigationProps> = ({ isLogin }) => {
   const [currentTab, setCurrentTab] = React.useState(0);
   const router = useRouter();
-  console.log("isLogin", isLogin);
 
   const navigation = [
     { name: "Home", href: "#", current: currentTab, isLogin: true },
