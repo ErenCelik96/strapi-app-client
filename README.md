@@ -1,7 +1,7 @@
 ## About This Project
 
 Client: Next.js (typescript) <br />
-Api: Used Strapi
+Api: Strapi
 
 Packages; <br />
 State management: Zustand <br />
