@@ -1,6 +1,6 @@
 ## About This Project
 
-Client: Next.js (typescript)
+Client: Next.js (typescript) <br />
 Api: Used Strapi
 
 Packages;
