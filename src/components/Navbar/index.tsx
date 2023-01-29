@@ -3,9 +3,18 @@ import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import classNames from "@/helpers";
 import React from "react";
 import { Navigation, NavigationMobile, ProfileMenu } from "./Navigators";
+import { Navbar } from "@/types";
 
-export default function Navbar() {
+const Navbar: React.FC<Navbar> = ({ user }) => {
   const [isLogin, setIsLogin] = React.useState<Boolean>(true);
+
+  React.useEffect(() => {
+    if (user && user?.username) {
+      setIsLogin(true);
+    } else {
+      setIsLogin(false);
+    }
+  }, [user]);
 
   return (
     <Disclosure as="nav" className="bg-gray-800 w-full">
@@ -78,4 +87,6 @@ export default function Navbar() {
       )}
     </Disclosure>
   );
-}
+};
+
+export default Navbar;

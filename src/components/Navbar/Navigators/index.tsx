@@ -3,13 +3,16 @@ import { Disclosure, Menu, Transition } from "@headlessui/react";
 import classNames from "@/helpers";
 import { useRouter } from "next/router";
 import { NavigationProps } from "@/types";
-
-const userNavigation = [
-  { name: "Your Profile", href: "#" },
-  { name: "Sign out", href: "#" },
-];
+import { authStore } from "@/store";
 
 const ProfileMenu = () => {
+  const logout = authStore((state: any) => state.logout);
+
+  const userNavigation = [
+    { name: "Your Profile", href: "#", onClick: () => {} },
+    { name: "Sign out", href: "#", onClick: logout },
+  ];
+
   return (
     <Menu as="div" className="relative ml-3">
       <div>
@@ -36,6 +39,7 @@ const ProfileMenu = () => {
             <Menu.Item key={item.name}>
               {({ active }) => (
                 <a
+                  onClick={item.onClick}
                   href={item.href}
                   className={classNames(
                     active ? "bg-gray-100" : "",
@@ -58,15 +62,15 @@ const Navigation: React.FC<NavigationProps> = ({ isLogin }) => {
   const router = useRouter();
 
   const navigation = [
-    { name: "Home", href: "#", current: currentTab, isLogin: true },
-    { name: "Team", href: "#", current: currentTab, isLogin: true },
-    { name: "Contact", href: "#", current: currentTab, isLogin: false },
+    { name: "Home", href: "#", current: currentTab },
+    { name: "Team", href: "#", current: currentTab },
+    { name: "Contact", href: "#", current: currentTab },
   ];
 
   return (
     <>
       {navigation.map((item, index) =>
-        item.isLogin && isLogin ? (
+        isLogin ? (
           <a
             key={item.name}
             onClick={() => {
@@ -83,27 +87,7 @@ const Navigation: React.FC<NavigationProps> = ({ isLogin }) => {
           >
             {item.name}
           </a>
-        ) : (
-          !item.isLogin &&
-          !isLogin && (
-            <a
-              key={item.name}
-              onClick={() => {
-                setCurrentTab(index);
-                router.push("/hello");
-              }}
-              className={classNames(
-                item.current == index
-                  ? "bg-gray-900 text-white"
-                  : "text-gray-300 hover:bg-gray-700 hover:text-white",
-                "px-3 py-2 rounded-md text-sm font-medium"
-              )}
-              aria-current={item.current ? "page" : undefined}
-            >
-              {item.name}
-            </a>
-          )
-        )
+        ) : null
       )}
     </>
   );
@@ -122,7 +106,7 @@ const NavigationMobile: React.FC<NavigationProps> = ({ isLogin }) => {
     <Disclosure.Panel className="sm:hidden">
       <div className="space-y-1 px-2 pt-2 pb-3">
         {navigation.map((item, index) =>
-          item.isLogin && isLogin ? (
+          isLogin ? (
             <Disclosure.Button
               key={item.name}
               as="a"
@@ -141,29 +125,7 @@ const NavigationMobile: React.FC<NavigationProps> = ({ isLogin }) => {
             >
               {item.name}
             </Disclosure.Button>
-          ) : (
-            !item.isLogin &&
-            !isLogin && (
-              <Disclosure.Button
-                key={item.name}
-                as="a"
-                href={item.href}
-                onClick={() => {
-                  setCurrentTab(index);
-                  router.push("/hello");
-                }}
-                className={classNames(
-                  item.current == index
-                    ? "bg-gray-900 text-white"
-                    : "text-gray-300 hover:bg-gray-700 hover:text-white",
-                  "block px-3 py-2 rounded-md text-base font-medium"
-                )}
-                aria-current={item.current ? "page" : undefined}
-              >
-                {item.name}
-              </Disclosure.Button>
-            )
-          )
+          ) : null
         )}
       </div>
     </Disclosure.Panel>

@@ -1,20 +1,22 @@
 import Head from "next/head";
 import { Inter } from "@next/font/google";
 import React from "react";
+import { authStore } from "@/store";
+import Login from "@/components/Forms/Login";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
-  const getUser = async () => {
-    const res = await fetch("http://localhost:1337/api/users/me");
-    const data = await res.json();
-    return data;
-  };
+  const user = authStore((state: any) => state.user);
+  const [isLogin, setIsLogin] = React.useState<Boolean>(true);
+
   React.useEffect(() => {
-    getUser()
-      .then((res) => console.log(res.data, "done"))
-      .catch((err) => console.log(err));
-  }, []);
+    if (user && user?.username) {
+      setIsLogin(true);
+    } else {
+      setIsLogin(false);
+    }
+  }, [user]);
 
   return (
     <>
@@ -24,7 +26,7 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main></main>
+      <main>{isLogin ? <h1>Welcome {user?.username}</h1> : <Login />}</main>
     </>
   );
 }
