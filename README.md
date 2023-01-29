@@ -3,7 +3,6 @@
 Client: Next.js (typescript) <br />
 Api: Strapi
 
-Packages; <br />
+And used these packages; <br />
 State management: Zustand <br />
 UI: Tailwind CSS <br />
-Form: React hook form
