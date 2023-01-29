@@ -1,10 +1,15 @@
 import { authStore } from "@/store";
 import React from "react";
-import { LockClosedIcon } from "@heroicons/react/20/solid";
+import {
+  CodeBracketSquareIcon,
+  LockClosedIcon,
+} from "@heroicons/react/20/solid";
+import { useRouter } from "next/router";
 
 export default function Login() {
   const login = authStore((state: any) => state.login);
   const user = authStore((state: any) => state.user);
+  const router = useRouter();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -19,20 +24,26 @@ export default function Login() {
     <div className="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-8">
         <div>
-          <img
-            className="mx-auto h-12 w-auto"
-            src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-            alt="Your Company"
+          <CodeBracketSquareIcon
+            className="mx-auto"
+            color="#6367f2"
+            width={80}
           />
           <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
             Sign in to your account
           </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-              Or{' '}
-              <a href="#" className="font-medium text-xl text-indigo-600 hover:text-indigo-500">
-                Register
-              </a>
-            </p>
+          <p
+            className="mt-2 text-center text-sm text-gray-600"
+            onClick={() => router.push("/register")}
+          >
+            Or{" "}
+            <a
+              href="#"
+              className="font-medium text-xl text-indigo-600 hover:text-indigo-500"
+            >
+              Register
+            </a>
+          </p>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <input type="hidden" name="remember" defaultValue="true" />
@@ -68,21 +79,6 @@ export default function Login() {
           </div>
 
           <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <input
-                id="remember-me"
-                name="remember-me"
-                type="checkbox"
-                className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-              />
-              <label
-                htmlFor="remember-me"
-                className="ml-2 block text-sm text-gray-900"
-              >
-                Remember me
-              </label>
-            </div>
-
             <div className="text-sm">
               <a
                 href="#"

@@ -2,7 +2,7 @@ import { create } from "zustand";
 import Cookies from "js-cookie";
 
 const url = process.env.NEXT_PUBLIC_STRAPI_URL;
-const localUser = JSON.parse(Cookies.get("user") || '{}') || null;
+const localUser = JSON.parse(Cookies.get("user") || "{}") || null;
 
 export const authStore = create((set) => ({
   user: localUser || null,
@@ -10,7 +10,7 @@ export const authStore = create((set) => ({
   isLoading: false,
   error: false,
   message: null,
-  
+
   login: async (email: string, password: string) => {
     set({ isLoading: true });
     const res = await fetch(`${url}auth/local`, {
@@ -43,7 +43,7 @@ export const authStore = create((set) => ({
 
   register: async (username: string, email: string, password: string) => {
     set({ isLoading: true });
-    const res = await fetch(`${url}/auth/local/register`, {
+    const res = await fetch(`${url}auth/local/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -59,12 +59,13 @@ export const authStore = create((set) => ({
       Cookies.set("token", data.jwt);
       Cookies.set("user", JSON.stringify(data.user));
       set({ user: data.user, token: data.jwt });
+      window.location.href = "/";
     } else {
       set({ error: true });
     }
     set({ isLoading: false });
   },
-  
+
   getUserFromLocalStorage: () => {
     const user = Cookies.get("user");
     if (user) {
@@ -74,7 +75,7 @@ export const authStore = create((set) => ({
 
   forgotPassword: async (email: string) => {
     set({ isLoading: true });
-    const res = await fetch(`${url}/auth/forgot-password`, {
+    const res = await fetch(`${url}auth/forgot-password`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -91,4 +92,3 @@ export const authStore = create((set) => ({
     set({ isLoading: false });
   },
 }));
-
