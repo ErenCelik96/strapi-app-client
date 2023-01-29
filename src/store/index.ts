@@ -1,16 +1,19 @@
 import { create } from "zustand";
+import Cookies from "js-cookie";
 
 const url = process.env.NEXT_PUBLIC_STRAPI_URL;
+const localUser = JSON.parse(Cookies.get("user") || '{}') || null;
 
 export const authStore = create((set) => ({
-  user: null,
+  user: localUser || null,
   token: null,
   isLoading: false,
   error: false,
+  message: null,
   
   login: async (email: string, password: string) => {
     set({ isLoading: true });
-    const res = await fetch(`${url}/auth/local`, {
+    const res = await fetch(`${url}auth/local`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -22,8 +25,8 @@ export const authStore = create((set) => ({
     });
     const data = await res.json();
     if (res.ok) {
-      localStorage.setItem("token", data.jwt);
-      localStorage.setItem("user", JSON.stringify(data.user));
+      Cookies.set("token", data.jwt);
+      Cookies.set("user", JSON.stringify(data.user));
       set({ user: data.user, token: data.jwt });
     } else {
       set({ error: true });
@@ -32,9 +35,10 @@ export const authStore = create((set) => ({
   },
 
   logout: () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+    Cookies.remove("token");
+    Cookies.remove("user");
     set({ user: null, token: null });
+    window.location.href = "/";
   },
 
   register: async (username: string, email: string, password: string) => {
@@ -52,8 +56,8 @@ export const authStore = create((set) => ({
     });
     const data = await res.json();
     if (res.ok) {
-      localStorage.setItem("token", data.jwt);
-      localStorage.setItem("user", JSON.stringify(data.user));
+      Cookies.set("token", data.jwt);
+      Cookies.set("user", JSON.stringify(data.user));
       set({ user: data.user, token: data.jwt });
     } else {
       set({ error: true });
@@ -62,10 +66,29 @@ export const authStore = create((set) => ({
   },
   
   getUserFromLocalStorage: () => {
-    const user = localStorage.getItem("user");
+    const user = Cookies.get("user");
     if (user) {
       set({ user: JSON.parse(user) });
     }
-  }
+  },
+
+  forgotPassword: async (email: string) => {
+    set({ isLoading: true });
+    const res = await fetch(`${url}/auth/forgot-password`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email,
+      }),
+    });
+    if (res.ok) {
+      set({ message: "Check your email" });
+    } else {
+      set({ error: true });
+    }
+    set({ isLoading: false });
+  },
 }));
 
