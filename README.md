@@ -3,6 +3,6 @@
 Client: Next.js (typescript) <br />
 Api: Strapi
 
-And used these packages; <br />
+And these packages have been used; <br />
 State management: Zustand <br />
 UI: Tailwind CSS <br />
