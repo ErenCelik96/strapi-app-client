@@ -3,15 +3,16 @@ export interface NavigationProps {
 }
 
 export interface User {
-  jwt: string;
-  user: {
-    id: number;
-    username: string;
-    email: string;
-    provider: string;
-    confirmed: boolean;
-    blocked: boolean;
-    createdAt: string;
-    updatedAt: string;
-  };
+  id: number;
+  username: string;
+  email: string;
+  provider: string;
+  confirmed: boolean;
+  blocked: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Navbar {
+  user: User;
 }
