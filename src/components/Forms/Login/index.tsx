@@ -36,7 +36,7 @@ export default function Login() {
             Or{" "}
             <a
               onClick={() => router.push("/register")}
-              href="#"
+              href=""
               className="font-medium text-xl text-indigo-600 hover:text-indigo-500"
             >
               Register
@@ -79,7 +79,7 @@ export default function Login() {
           <div className="flex items-center justify-between">
             <div className="text-sm">
               <a
-                href="#"
+                href=""
                 className="font-medium text-indigo-600 hover:text-indigo-500"
               >
                 Forgot your password?

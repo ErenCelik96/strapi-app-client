@@ -7,9 +7,11 @@ import {
 } from "@heroicons/react/24/outline";
 import classNames from "@/helpers";
 import React from "react";
-import { Navigation, NavigationMobile, ProfileMenu } from "./Navigators";
+import { Navigation, NavigationMobile } from "./Navigators";
 import { Navbar } from "@/types";
 import { useRouter } from "next/router";
+import dynamic from "next/dynamic";
+const ProfileMenu = dynamic(() => import('./Navigators'), { ssr: false });
 
 const Navbar: React.FC<Navbar> = ({ user }) => {
   const [isLogin, setIsLogin] = React.useState<Boolean>(true);
@@ -79,12 +81,12 @@ const Navbar: React.FC<Navbar> = ({ user }) => {
                       </Menu.Item>
                     </Menu.Items>
                   </Menu>
-                  <ProfileMenu />
+                  <ProfileMenu user={user}/>
                 </div>
               ) : null}
             </div>
           </div>
-          <NavigationMobile isLogin={isLogin} />
+          <NavigationMobile isLogin={isLogin}/>
         </>
       )}
     </Disclosure>

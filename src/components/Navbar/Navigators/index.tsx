@@ -5,12 +5,14 @@ import { useRouter } from "next/router";
 import { NavigationProps } from "@/types";
 import { authStore } from "@/store";
 
-const ProfileMenu = () => {
+export default function ProfileMenu({ user }: any) {
+  // TO DO: any typelar düzeltilmeli
   const logout = authStore((state: any) => state.logout);
+  const imageUri = user?.imageUri;
 
   const userNavigation = [
-    { name: "Your Profile", href: "#", onClick: () => {} },
-    { name: "Sign out", href: "#", onClick: logout },
+    { name: "Your Profile", href: "", onClick: () => {} },
+    { name: "Sign out", href: "", onClick: logout },
   ];
 
   return (
@@ -20,8 +22,11 @@ const ProfileMenu = () => {
           <span className="sr-only">Open user menu</span>
           <img
             className="h-8 w-8 rounded-full"
-            src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-            alt=""
+            src={
+              imageUri ||
+              "https://e-publicwarningotsk.pom.go.id/pw2022/img/user.png"
+            }
+            alt="user image"
           />
         </Menu.Button>
       </div>
@@ -55,16 +60,16 @@ const ProfileMenu = () => {
       </Transition>
     </Menu>
   );
-};
+}
 
 const Navigation: React.FC<NavigationProps> = ({ isLogin }) => {
   const [currentTab, setCurrentTab] = React.useState(0);
   const router = useRouter();
 
   const navigation = [
-    { name: "Home", href: "#", current: currentTab },
-    { name: "Team", href: "#", current: currentTab },
-    { name: "Contact", href: "#", current: currentTab },
+    { name: "Home", href: "", current: currentTab },
+    { name: "Team", href: "", current: currentTab },
+    { name: "Contact", href: "", current: currentTab },
   ];
 
   return (
@@ -97,9 +102,9 @@ const NavigationMobile: React.FC<NavigationProps> = ({ isLogin }) => {
   const router = useRouter();
 
   const navigation = [
-    { name: "Home", href: "#", current: currentTab, isLogin: true },
-    { name: "Team", href: "#", current: currentTab, isLogin: true },
-    { name: "Contact", href: "#", current: currentTab, isLogin: false },
+    { name: "Home", href: "", current: currentTab, isLogin: true },
+    { name: "Team", href: "", current: currentTab, isLogin: true },
+    { name: "Contact", href: "", current: currentTab, isLogin: false },
   ];
   return (
     <Disclosure.Panel className="sm:hidden">
@@ -130,4 +135,4 @@ const NavigationMobile: React.FC<NavigationProps> = ({ isLogin }) => {
   );
 };
 
-export { ProfileMenu, Navigation, NavigationMobile };
+export { Navigation, NavigationMobile };
