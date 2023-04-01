@@ -1,17 +1,16 @@
 import React, { Fragment } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import classNames from "@/helpers";
-import { useRouter } from "next/router";
 import { NavigationProps } from "@/types";
 import { authStore } from "@/store";
 
 export default function ProfileMenu({ user }: any) {
   // TO DO: any typelar düzeltilmeli
   const logout = authStore((state: any) => state.logout);
-  const imageUri = user?.imageUri;
+  const imageUri = user?.imageUri || "default_user";
 
   const userNavigation = [
-    { name: "Your Profile", href: "", onClick: () => {} },
+    { name: "Your Profile", href: "/profile", onClick: () => {} },
     { name: "Sign out", href: "", onClick: logout },
   ];
 
@@ -22,10 +21,7 @@ export default function ProfileMenu({ user }: any) {
           <span className="sr-only">Open user menu</span>
           <img
             className="h-8 w-8 rounded-full"
-            src={
-              imageUri ||
-              "https://e-publicwarningotsk.pom.go.id/pw2022/img/user.png"
-            }
+            src={`https://res.cloudinary.com/dohzbtmro/image/upload/f_auto,q_auto,w_150,h_150,g_face,c_thumb,r_max/${imageUri}.jpg`}
             alt="user image"
           />
         </Menu.Button>
@@ -64,7 +60,6 @@ export default function ProfileMenu({ user }: any) {
 
 const Navigation: React.FC<NavigationProps> = ({ isLogin }) => {
   const [currentTab, setCurrentTab] = React.useState(0);
-  const router = useRouter();
 
   const navigation = [
     { name: "Home", href: "", current: currentTab },
@@ -99,7 +94,6 @@ const Navigation: React.FC<NavigationProps> = ({ isLogin }) => {
 
 const NavigationMobile: React.FC<NavigationProps> = ({ isLogin }) => {
   const [currentTab, setCurrentTab] = React.useState(0);
-  const router = useRouter();
 
   const navigation = [
     { name: "Home", href: "", current: currentTab, isLogin: true },

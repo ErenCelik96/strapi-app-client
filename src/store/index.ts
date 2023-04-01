@@ -27,6 +27,7 @@ export const authStore = create((set) => ({
     if (res.ok) {
       Cookies.set("token", data.jwt);
       Cookies.set("user", JSON.stringify(data.user));
+      Cookies.set("userId", data.user.id);
       set({ user: data.user, token: data.jwt });
     } else {
       set({ error: true });
@@ -58,6 +59,7 @@ export const authStore = create((set) => ({
     if (res.ok) {
       Cookies.set("token", data.jwt);
       Cookies.set("user", JSON.stringify(data.user));
+      Cookies.set("userId", data.user.id);
       set({ user: data.user, token: data.jwt });
       window.location.href = "/";
     } else {
@@ -90,5 +92,21 @@ export const authStore = create((set) => ({
       set({ error: true });
     }
     set({ isLoading: false });
+  },
+
+  getIdFromLocalCookie: () => {
+    const jwt = Cookies.get("token");
+  if (jwt) {
+    return fetch(`${process.env.NEXT_PUBLIC_STRAPI_URL}users/me`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${jwt}`,
+      },
+    }).then((data:any) => {
+      return data.id;
+    });
+  } else {
+    return;
+  }
   },
 }));
