@@ -23,7 +23,7 @@ export const authStore = create((set) => ({
         password,
       }),
     });
-    const data = await res.json();
+    const data = await res?.json();
     if (res.ok) {
       Cookies.set("token", data.jwt);
       Cookies.set("user", JSON.stringify(data.user));
