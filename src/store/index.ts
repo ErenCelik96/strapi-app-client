@@ -5,7 +5,7 @@ const url = process.env.NEXT_PUBLIC_STRAPI_URL;
 const localUser = JSON.parse(Cookies.get("user") || "{}") || null;
 
 export const authStore = create((set) => ({
-  user: localUser || null,
+  user: localUser,
   token: null,
   isLoading: false,
   error: false,
@@ -38,6 +38,7 @@ export const authStore = create((set) => ({
   logout: () => {
     Cookies.remove("token");
     Cookies.remove("user");
+    Cookies.remove("userId");
     set({ user: null, token: null });
     window.location.href = "/";
   },
@@ -71,8 +72,9 @@ export const authStore = create((set) => ({
   getUserFromLocalStorage: () => {
     const user = Cookies.get("user");
     if (user) {
-      set({ user: JSON.parse(user) });
+      return JSON.parse(user);
     }
+    return null;
   },
 
   forgotPassword: async (email: string) => {
@@ -94,19 +96,22 @@ export const authStore = create((set) => ({
     set({ isLoading: false });
   },
 
-  getIdFromLocalCookie: () => {
+  getIdFromLocalCookie: async () => {
     const jwt = Cookies.get("token");
-  if (jwt) {
-    return fetch(`${process.env.NEXT_PUBLIC_STRAPI_URL}users/me`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${jwt}`,
-      },
-    }).then((data:any) => {
-      return data.id;
-    });
-  } else {
-    return;
-  }
+    if (jwt) {
+      let data;
+      await fetch(`${process.env.NEXT_PUBLIC_STRAPI_URL}users/me`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
+        .then((res) => (data = res.json()))
+        .then((data: any) => {
+          return data.id;
+        });
+    } else {
+      return;
+    }
   },
 }));

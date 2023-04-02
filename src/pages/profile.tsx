@@ -1,13 +1,30 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { authStore } from "@/store";
 import { useRouter } from "next/router";
+import { User } from "@/types";
+import Cookies from "js-cookie";
 
-const Profile = ({ avatar }: any) => {
+const Profile = ({ avatar, data }: any) => {
   const [image, setImage] = useState(null);
+  const [user, setUser] = useState<User>();
+
   const router = useRouter();
   const getIdFromLocalCookie = authStore(
     (state: any) => state.getIdFromLocalCookie
   );
+  const getUser = authStore((state: any) => state.user);
+
+  useEffect(() => {
+    if (getUser) {
+      setUser(getUser);
+    }
+  }, [getUser]);
+
+  useEffect(() => {
+    if (data) {
+      Cookies.set("user", JSON.stringify(data));
+    }
+  }, [data]);
 
   const uploadToClient = (event: any) => {
     if (event.target.files && event.target.files[0]) {
@@ -31,32 +48,35 @@ const Profile = ({ avatar }: any) => {
   };
 
   return (
-    <div>
-      <>
-        <h1 className="text-5xl font-bold">
-          Welcome back <span>👋</span>
-        </h1>
-        {avatar === "default_user" && (
-          <div>
-            <h4>Select an image to upload</h4>
-            <input type="file" onChange={uploadToClient} />
-            <button
-              className="md:p-2 rounded py-2 text-black bg-purple-200 p-2"
-              type="submit"
-              onClick={uploadToServer}
-            >
-              Set Profile Image
-            </button>
-          </div>
-        )}
-        {/* eslint-disable @next/next/no-img-element */}
-        {avatar && (
-          <img
-            src={`https://res.cloudinary.com/dohzbtmro/image/upload/f_auto,q_auto,w_150,h_150,g_face,c_thumb,r_max/${avatar}.jpg`}
-            alt="Profile"
-          />
-        )}
-      </>
+    <div className="flex justify-between items-center flex-col mt-5 bg-indigo-700 p-5">
+      {/* eslint-disable @next/next/no-img-element */}
+      {avatar && (
+        <img
+          src={`https://res.cloudinary.com/dohzbtmro/image/upload/f_auto,q_auto,w_150,h_150,g_face,c_thumb,r_max/${avatar}.jpg`}
+          alt="Profile"
+        />
+      )}
+      <h1 className="text-5xl font-bold text-white">
+        Hi {user?.username} <span>👋</span>
+      </h1>
+      <h3 className="mt-3 text-white text-xl">Your email: {user?.email}</h3>
+      <h3 className="mt-3 text-white text-xl">
+        Account created at: {user?.createdAt?.split("T")[0]}
+      </h3>
+
+      {avatar === "default_user" && (
+        <div className="mt-3">
+          <h4 className="text-center">You have not a profile picture yet.</h4>
+          <input type="file" onChange={uploadToClient} className="mt-3" />
+          <button
+            className="md:p-2 rounded py-2 text-black bg-purple-200 p-2"
+            type="submit"
+            onClick={uploadToServer}
+          >
+            Set Profile Image
+          </button>
+        </div>
+      )}
     </div>
   );
 };
@@ -87,6 +107,7 @@ export async function getServerSideProps({ req }: any) {
     return {
       props: {
         avatar,
+        data: responseData,
       },
     };
   }

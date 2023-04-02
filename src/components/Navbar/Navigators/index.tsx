@@ -3,6 +3,7 @@ import { Disclosure, Menu, Transition } from "@headlessui/react";
 import classNames from "@/helpers";
 import { NavigationProps } from "@/types";
 import { authStore } from "@/store";
+import { useRouter } from "next/router";
 
 export default function ProfileMenu({ user }: any) {
   // TO DO: any typelar düzeltilmeli
@@ -11,7 +12,7 @@ export default function ProfileMenu({ user }: any) {
 
   const userNavigation = [
     { name: "Your Profile", href: "/profile", onClick: () => {} },
-    { name: "Sign out", href: "", onClick: logout },
+    { name: "Sign out", href: "/", onClick: logout },
   ];
 
   return (
@@ -39,16 +40,19 @@ export default function ProfileMenu({ user }: any) {
           {userNavigation.map((item) => (
             <Menu.Item key={item.name}>
               {({ active }) => (
-                <a
-                  onClick={item.onClick}
-                  href={item.href}
-                  className={classNames(
-                    active ? "bg-gray-100" : "",
-                    "block px-4 py-2 text-sm text-gray-700"
-                  )}
-                >
-                  {item.name}
-                </a>
+                <>
+                  <a
+                    onClick={item.onClick}
+                    href={item.href}
+                    className={classNames(
+                      active ? "bg-gray-100" : "",
+                      "block px-4 py-2 text-sm text-gray-700"
+                    )}
+                  >
+                    {item.name}
+                  </a>
+                  {console.log("item", item)}
+                </>
               )}
             </Menu.Item>
           ))}
@@ -60,32 +64,46 @@ export default function ProfileMenu({ user }: any) {
 
 const Navigation: React.FC<NavigationProps> = ({ isLogin }) => {
   const [currentTab, setCurrentTab] = React.useState(0);
+  const router = useRouter();
+
+  React.useEffect(() => {
+    if (router.pathname === "/") {
+      setCurrentTab(0);
+    } else if (router.pathname === "/team") {
+      setCurrentTab(1);
+    } else if (router.pathname === "/contact") {
+      setCurrentTab(2);
+    }
+  }, [router.pathname]);
 
   const navigation = [
-    { name: "Home", href: "", current: currentTab },
-    { name: "Team", href: "", current: currentTab },
-    { name: "Contact", href: "", current: currentTab },
+    { name: "Home", href: "/", current: currentTab },
+    //{ name: "Team", href: "/team", current: currentTab },
+    //{ name: "Contact", href: "/contact", current: currentTab },
   ];
 
   return (
     <>
       {navigation.map((item, index) =>
         isLogin ? (
-          <a
-            key={item.name}
-            onClick={() => {
-              setCurrentTab(index);
-            }}
-            className={classNames(
-              item.current == index
-                ? "bg-gray-900 text-white"
-                : "text-gray-300 hover:bg-gray-700 hover:text-white",
-              "px-3 py-2 rounded-md text-sm font-medium cursor-pointer"
-            )}
-            aria-current={item.current ? "page" : undefined}
-          >
-            {item.name}
-          </a>
+          <>
+            <a
+              key={item.name}
+              onClick={() => {
+                setCurrentTab(index);
+                router.push(item.href);
+              }}
+              className={classNames(
+                item.current == index
+                  ? "bg-gray-900 text-white"
+                  : "text-gray-300 hover:bg-gray-700 hover:text-white",
+                "px-3 py-2 rounded-md text-sm font-medium cursor-pointer"
+              )}
+              aria-current={item.current ? "page" : undefined}
+            >
+              {item.name}
+            </a>
+          </>
         ) : null
       )}
     </>
@@ -94,12 +112,24 @@ const Navigation: React.FC<NavigationProps> = ({ isLogin }) => {
 
 const NavigationMobile: React.FC<NavigationProps> = ({ isLogin }) => {
   const [currentTab, setCurrentTab] = React.useState(0);
+  const router = useRouter();
+
+  React.useEffect(() => {
+    if (router.pathname === "/") {
+      setCurrentTab(0);
+    } else if (router.pathname === "/team") {
+      setCurrentTab(1);
+    } else if (router.pathname === "/contact") {
+      setCurrentTab(2);
+    }
+  }, [router.pathname]);
 
   const navigation = [
-    { name: "Home", href: "", current: currentTab, isLogin: true },
-    { name: "Team", href: "", current: currentTab, isLogin: true },
-    { name: "Contact", href: "", current: currentTab, isLogin: false },
+    { name: "Home", href: "/", current: currentTab },
+    //{ name: "Team", href: "/team", current: currentTab },
+    //{ name: "Contact", href: "/contact", current: currentTab },
   ];
+
   return (
     <Disclosure.Panel className="sm:hidden">
       <div className="space-y-1 px-2 pt-2 pb-3">
@@ -111,6 +141,7 @@ const NavigationMobile: React.FC<NavigationProps> = ({ isLogin }) => {
               href={item.href}
               onClick={() => {
                 setCurrentTab(index);
+                router.push(item.href);
               }}
               className={classNames(
                 item.current == index
