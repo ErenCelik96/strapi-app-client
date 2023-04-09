@@ -9,7 +9,7 @@ export const authStore = create((set) => ({
   token: null,
   isLoading: false,
   error: false,
-  message: null,
+  message: "",
 
   login: async (email: string, password: string) => {
     set({ isLoading: true });
@@ -30,7 +30,7 @@ export const authStore = create((set) => ({
       Cookies.set("userId", data.user.id);
       set({ user: data.user, token: data.jwt });
     } else {
-      set({ error: true });
+      set({ error: true, message: "Failed to login. Please check your username and password." });
     }
     set({ isLoading: false });
   },
@@ -64,8 +64,8 @@ export const authStore = create((set) => ({
       set({ user: data.user, token: data.jwt });
       window.location.href = "/";
     } else {
-      set({ error: true });
-    }
+      set({ error: true, message: "Registration failed. Please check your username and password." });
+      }
     set({ isLoading: false });
   },
 
@@ -91,7 +91,7 @@ export const authStore = create((set) => ({
     if (res.ok) {
       set({ message: "Check your email" });
     } else {
-      set({ error: true });
+      set({ error: true, message: "Email not found" });
     }
     set({ isLoading: false });
   },
@@ -109,6 +109,26 @@ export const authStore = create((set) => ({
         .then((res) => (data = res.json()))
         .then((data: any) => {
           return data.id;
+        });
+    } else {
+      return;
+    }
+  },
+
+  deletePost: async (id: string) => {
+    const jwt = Cookies.get("token");
+    if (jwt) {
+      let data;
+      await fetch(`${process.env.NEXT_PUBLIC_STRAPI_URL}posts/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
+        .then((res) => (data = res.json()))
+        .then((data: any) => {
+          window.location.reload();
         });
     } else {
       return;

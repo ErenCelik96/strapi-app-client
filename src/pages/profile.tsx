@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { authStore } from "@/store";
-import { useRouter } from "next/router";
 import { User } from "@/types";
 import Cookies from "js-cookie";
 
@@ -8,7 +7,6 @@ const Profile = ({ avatar, data }: any) => {
   const [image, setImage] = useState(null);
   const [user, setUser] = useState<User>();
 
-  const router = useRouter();
   const getIdFromLocalCookie = authStore(
     (state: any) => state.getIdFromLocalCookie
   );
@@ -41,7 +39,7 @@ const Profile = ({ avatar, data }: any) => {
       await fetch("/api/upload", {
         method: "POST",
         body: formData,
-      }).then((_) => router.reload());
+      });
     } catch (error) {
       console.error(JSON.stringify(error));
     }
