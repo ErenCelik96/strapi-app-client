@@ -3,15 +3,17 @@ import { authStore } from "@/store";
 import Login from "@/components/Forms/Login";
 import PostPage from "@/components/Post";
 import { GetServerSideProps } from "next";
+import { PostProps, PostsArray } from "@/types";
 interface HomePageProps {
-  posts: any;
+  posts: PostProps;
 }
 
-export default function Home({ posts }: HomePageProps) {
+export default function Home({ posts }: PostsArray) {
   const user = authStore((state: any) => state.user);
   const [isLogin, setIsLogin] = React.useState<Boolean>(true);
   const [post, setPost] = React.useState<any>([]);
-  
+  console.log(posts);
+
   React.useLayoutEffect(() => {
     if (user && user?.username) {
       setIsLogin(true);

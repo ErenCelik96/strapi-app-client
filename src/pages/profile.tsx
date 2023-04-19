@@ -12,6 +12,7 @@ const Profile = ({ avatar, data }: any) => {
   );
   const getUser = authStore((state: any) => state.user);
 
+  // for hydrating the user state
   useEffect(() => {
     if (getUser) {
       setUser(getUser);

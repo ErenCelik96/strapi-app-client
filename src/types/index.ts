@@ -31,3 +31,23 @@ export interface Auth {
   forgotPassword: (email: string) => void;
   getIdFromLocalStorage: () => void;
 }
+
+export interface PostProps {
+  post: {
+    id: number;
+    attributes: {
+      title: string;
+      description: string;
+      imageUri: string;
+      subject: string;
+      tutor: string;
+      createdAt: string;
+      updatedAt: string;
+      userId: number;
+    };
+  };
+}
+
+export interface PostsArray{
+  posts: PostProps[];
+  };
