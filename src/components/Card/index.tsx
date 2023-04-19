@@ -6,22 +6,26 @@ export default function Card({ data }: any) {
   const deletePost = authStore((state: any) => state.deletePost);
   const { attributes } = data;
   const { title, imageUri, description, createdAt, subject, tutor, updatedAt } =
-  attributes;
+    attributes;
 
   const tutorOfPost = user?.username == tutor;
+
   const formattedDescription =
     description.length > 21
       ? description.substring(0, 21) + "..."
       : description;
+
+  const postImage =
+    imageUri ||
+    "https://cdn.nerdschalk.com/wp-content/uploads/2020/07/instagram-no-posts-yet-759x427.png";
+
   return (
     <>
       <div className="max-w-sm min-w-24 lg:max-w-full lg:flex">
         <div
           className="h-48 lg:h-auto lg:w-48 flex-none bg-cover rounded-t lg:rounded-t-none lg:rounded-l text-center overflow-hidden bg-center bg-no-repeat"
           style={{
-            backgroundImage:
-              imageUri ||
-              "url('https://cdn.nerdschalk.com/wp-content/uploads/2020/07/instagram-no-posts-yet-759x427.png)",
+            backgroundImage: `url(${postImage})`,
           }}
           title="Woman holding a mug"
         ></div>
